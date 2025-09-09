@@ -1,9 +1,10 @@
-import { atom } from "nanostores";
 import {
   onAuthStateChanged,
-  type User,
   signInAnonymously,
+  type User,
 } from "firebase/auth";
+import { atom } from "nanostores";
+
 import { auth } from "../libs/firebase.ts";
 
 export const authStore = atom<{ user: User | null; loading: boolean }>({
