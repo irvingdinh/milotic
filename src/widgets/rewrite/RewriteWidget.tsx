@@ -2,7 +2,6 @@ import { useStore } from "@nanostores/preact";
 import { useState } from "preact/hooks";
 import { authStore } from "../../stores/auth-store.ts";
 
-
 export const RewriteWidget = () => {
   const { user, loading: authLoading } = useStore(authStore);
   const [text, setText] = useState("");
@@ -12,7 +11,7 @@ export const RewriteWidget = () => {
 
   const onSubmit = async (e: Event) => {
     e.preventDefault();
-    
+
     if (!user) {
       setError("Please wait for authentication to complete");
       return;
@@ -29,12 +28,12 @@ export const RewriteWidget = () => {
 
     try {
       const idToken = await user.getIdToken();
-      
+
       const response = await fetch("/api/v1/applications/rewrite", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": idToken,
+          Authorization: idToken,
         },
         body: JSON.stringify({
           text: text.trim(),
@@ -44,7 +43,9 @@ export const RewriteWidget = () => {
       if (!response.ok) {
         // Try to get error message from response body
         const errorText = await response.text().catch(() => "Unknown error");
-        throw new Error(errorText || `HTTP ${response.status}: ${response.statusText}`);
+        throw new Error(
+          errorText || `HTTP ${response.status}: ${response.statusText}`,
+        );
       }
 
       // Handle streaming plaintext response
@@ -59,15 +60,15 @@ export const RewriteWidget = () => {
       try {
         while (true) {
           const { done, value } = await reader.read();
-          
+
           if (done) {
             break;
           }
-          
+
           // Decode the chunk and append to accumulated result
           const chunk = decoder.decode(value, { stream: true });
           accumulatedResult += chunk;
-          
+
           // Update the result in real-time as chunks arrive
           setResult(accumulatedResult);
         }
@@ -79,10 +80,13 @@ export const RewriteWidget = () => {
       if (!accumulatedResult.trim()) {
         setResult("No rewritten text received");
       }
-      
     } catch (err) {
       console.error("Rewrite request failed:", err);
-      setError(err instanceof Error ? err.message : "Failed to rewrite text. Please try again.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to rewrite text. Please try again.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -96,11 +100,11 @@ export const RewriteWidget = () => {
   const isDisabled = authLoading || !user || isSubmitting || !text.trim();
 
   return (
-    <div style={{ maxWidth: "800px", margin: "0 auto", padding: "20px" }}>
-      <form onSubmit={onSubmit}>
-        <div style={{ marginBottom: "16px" }}>
-          <label htmlFor="rewrite-input" style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>
-            Enter text to rewrite:
+    <div class="container mx-auto max-w-4xl px-6 py-8">
+      <form onSubmit={onSubmit} class="space-y-6">
+        <div class="form-control">
+          <label class="label" htmlFor="rewrite-input">
+            <span class="label-text font-semibold">Enter text to rewrite:</span>
           </label>
           <textarea
             id="rewrite-input"
@@ -108,44 +112,19 @@ export const RewriteWidget = () => {
             onInput={(e) => setText((e.target as HTMLTextAreaElement).value)}
             placeholder="Enter the text you want to rewrite..."
             rows={6}
-            style={{
-              width: "100%",
-              padding: "12px",
-              border: "2px solid #e2e8f0",
-              borderRadius: "8px",
-              fontSize: "14px",
-              fontFamily: "inherit",
-              resize: "vertical",
-              outline: "none",
-              transition: "border-color 0.2s",
-            }}
-            onFocus={(e) => {
-              const target = e.target as HTMLTextAreaElement;
-              if (target) target.style.borderColor = "#3b82f6";
-            }}
-            onBlur={(e) => {
-              const target = e.target as HTMLTextAreaElement;
-              if (target) target.style.borderColor = "#e2e8f0";
-            }}
+            class="textarea textarea-bordered textarea-lg w-full resize-y"
           />
         </div>
 
-        <div style={{ display: "flex", gap: "12px", marginBottom: "20px" }}>
+        <div class="flex gap-3">
           <button
             type="submit"
             disabled={isDisabled}
-            style={{
-              padding: "12px 24px",
-              backgroundColor: isDisabled ? "#9ca3af" : "#3b82f6",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "14px",
-              fontWeight: "600",
-              cursor: isDisabled ? "not-allowed" : "pointer",
-              transition: "background-color 0.2s",
-            }}
+            class={`btn ${isDisabled ? "btn-disabled" : "btn-primary"}`}
           >
+            {isSubmitting && (
+              <span class="loading loading-spinner loading-sm"></span>
+            )}
             {isSubmitting ? "Rewriting..." : "Rewrite Text"}
           </button>
 
@@ -153,17 +132,7 @@ export const RewriteWidget = () => {
             <button
               type="button"
               onClick={clearResult}
-              style={{
-                padding: "12px 24px",
-                backgroundColor: "#6b7280",
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                fontSize: "14px",
-                fontWeight: "600",
-                cursor: "pointer",
-                transition: "background-color 0.2s",
-              }}
+              class="btn btn-outline btn-secondary"
             >
               Clear Result
             </button>
@@ -171,45 +140,42 @@ export const RewriteWidget = () => {
         </div>
 
         {authLoading && (
-          <div style={{ color: "#6b7280", marginBottom: "16px" }}>
+          <div class="alert alert-info">
+            <span class="loading loading-spinner loading-sm"></span>
             Authenticating...
           </div>
         )}
 
         {error && (
-          <div style={{
-            padding: "12px",
-            backgroundColor: "#fef2f2",
-            border: "1px solid #fecaca",
-            borderRadius: "8px",
-            color: "#dc2626",
-            marginBottom: "16px",
-            fontSize: "14px",
-          }}>
-            {error}
+          <div class="alert alert-error">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="stroke-current shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{error}</span>
           </div>
         )}
       </form>
 
       {result && (
         <>
-          <hr style={{ margin: "24px 0", border: "none", borderTop: "1px solid #e2e8f0" }} />
-          
-          <div>
-            <h3 style={{ marginBottom: "12px", color: "#374151", fontSize: "18px" }}>
-              Rewritten Text:
-            </h3>
-            <div style={{
-              padding: "16px",
-              backgroundColor: "#f8fafc",
-              border: "1px solid #e2e8f0",
-              borderRadius: "8px",
-              fontSize: "14px",
-              lineHeight: "1.6",
-              whiteSpace: "pre-wrap",
-              wordBreak: "break-word",
-            }}>
-              {result}
+          <div class="divider my-8"></div>
+
+          <div class="card bg-base-100 shadow-lg">
+            <div class="card-body">
+              <h3 class="card-title text-lg mb-4">Rewritten Text:</h3>
+              <div class="bg-base-200 p-4 rounded-lg text-sm leading-relaxed whitespace-pre-wrap break-words">
+                {result}
+              </div>
             </div>
           </div>
         </>
