@@ -1,0 +1,55 @@
+---
+alwaysApply: true
+description: Git commit conventions and workflow guidelines
+---
+
+# Git Conventions & Workflow
+
+## Commit Message Format
+
+**CRITICAL**: Follow Conventional Commits format with these specific patterns:
+
+### Format Structure
+```
+<type>: <description in past tense>
+
+Examples:
+feat: Added new `POST /api/v1/applications/rewrite`
+chore: Updated `POST /api/v1/applications/rewrite` for better system instruction and integration test
+fix: Fix a bad code in the `api.service.ts`
+docs: Added documentation for authentication flow
+refactor: Refactored auth store to use TypeScript strict types
+```
+
+### Specific Requirements
+
+- **Use past tense verbs**: "Added", "Updated", "Fixed" (NOT "Add", "Update", "Fix")
+- **Include specific details**: Reference API endpoints, file names, and functionality
+- **Use backticks around code/API references**: `POST /api/v1/applications/rewrite`, `api.service.ts`
+- **Keep messages descriptive but concise**
+- **Include file names for clarity** when fixing specific files
+
+### Common Types
+- `feat:` - New features
+- `fix:` - Bug fixes
+- `chore:` - Maintenance tasks, dependency updates
+- `docs:` - Documentation changes
+- `refactor:` - Code refactoring without feature changes
+- `test:` - Adding or updating tests
+- `style:` - Code formatting, styling changes
+
+## Git Workflow Rules
+
+**⚠️ IMPORTANT**: 
+- **NEVER commit changes automatically** without explicit user confirmation
+- **NEVER run `git commit`, `git push`, or any state-changing git commands** without permission
+- When making code changes, inform the user about modifications but DO NOT commit
+- If user requests commits, ask for confirmation first and show what files have been modified
+- Always let the user review changes before committing
+
+## Branch Management
+
+- Work on feature branches when developing new functionality
+- Use descriptive branch names: `feature/auth-integration`, `fix/firebase-config`
+- Keep commits atomic and focused on single changes
+- Squash commits when merging to main if multiple commits for same feature

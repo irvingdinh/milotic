@@ -1,0 +1,50 @@
+---
+globs: **/firebase.ts,**/auth-store.ts,**/*auth*
+description: Firebase integration patterns and authentication guidelines
+---
+
+# Firebase Integration Guidelines
+
+## Firebase Configuration
+
+- Keep Firebase config and initialization in [firebase.ts](mdc:src/libs/firebase.ts)
+- Use the singleton pattern to prevent multiple app instances
+- Export specific Firebase services (auth, firestore, etc.) from the main firebase file
+
+## Authentication Patterns
+
+- Use Firebase Auth with automatic anonymous sign-in as fallback
+- Centralize auth state in [auth-store.ts](mdc:src/stores/auth-store.ts) using nanostores
+- Listen to `onAuthStateChanged` for real-time auth state updates
+
+```typescript
+// Example auth store pattern
+export const authStore = atom<{ user: User | null; loading: boolean }>({
+  user: null,
+  loading: true,
+});
+
+onAuthStateChanged(auth, (user) => {
+  // Handle auth state changes
+});
+```
+
+## Security Best Practices
+
+- Never commit Firebase API keys to version control (they're public anyway for client-side)
+- Use Firebase Security Rules for actual security
+- Implement proper error handling for Firebase operations
+- Use appropriate Firebase Auth methods for your use case
+
+## Error Handling
+
+- Always wrap Firebase operations in try-catch blocks
+- Log errors appropriately for debugging
+- Provide user-friendly error messages
+- Handle network connectivity issues gracefully
+
+## Integration with Components
+
+- Use `@nanostores/preact` to consume Firebase state in components
+- Keep Firebase operations in stores, not in components
+- Use loading states for better UX during Firebase operations

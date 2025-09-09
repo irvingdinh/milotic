@@ -1,5 +1,19 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-// https://astro.build/config
-export default defineConfig({});
+import preact from '@astrojs/preact';
+
+export default defineConfig({
+  integrations: [preact()],
+  vite: {
+    server: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:8000',
+          changeOrigin: true,
+          secure: false,
+        }
+      }
+    }
+  }
+});

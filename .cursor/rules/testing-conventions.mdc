@@ -1,0 +1,54 @@
+---
+globs: **/*.test.ts,**/*.test.tsx,**/*.spec.ts,**/*.spec.tsx
+description: Testing conventions and patterns for the project
+---
+
+# Testing Conventions
+
+## Integration Tests
+
+- **Write only ONE integration test per API endpoint with the full payload (happy path)** unless specifically instructed otherwise
+- Focus on the happy path scenario with complete, realistic data
+- Use descriptive test names that explain what is being tested
+
+## Test Structure
+
+```typescript
+describe('API Endpoint Name', () => {
+  it('should successfully handle the complete happy path scenario', async () => {
+    // Arrange - Set up test data with full payload
+    const testData = {
+      // Complete, realistic test data
+    };
+
+    // Act - Execute the functionality
+    const result = await someFunction(testData);
+
+    // Assert - Verify the expected outcome
+    expect(result).toBeDefined();
+    // Additional specific assertions
+  });
+});
+```
+
+## Component Testing
+
+- Test components in isolation when possible
+- Mock external dependencies (Firebase, stores)
+- Test user interactions and state changes
+- Use realistic props and data
+
+## Firebase Testing
+
+- Mock Firebase services in tests
+- Use Firebase emulators for integration testing when needed
+- Test authentication flows with mock users
+- Verify store state changes correctly
+
+## Best Practices
+
+- Keep tests simple and focused
+- Use clear, descriptive assertions
+- Clean up after tests (reset mocks, clear state)
+- Test error scenarios only when specifically required
+- Prefer integration tests over unit tests for better confidence

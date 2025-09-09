@@ -1,0 +1,39 @@
+---
+alwaysApply: true
+description: Project structure and architecture guidelines for the Milotic Astro project
+---
+
+# Project Structure & Architecture
+
+This is an **Astro + Preact + TypeScript** project with Firebase authentication and nanostores for state management.
+
+## Directory Structure
+
+- `src/pages/` - Astro pages and routes
+- `src/widgets/` - Reusable UI components organized by feature (e.g., `auth/`)
+- `src/stores/` - Nanostores for global state management
+- `src/libs/` - Third-party integrations and utilities (Firebase, etc.)
+- `public/` - Static assets
+
+## Key Technologies
+
+- **Astro** - Static site generator with islands architecture
+- **Preact** - React-compatible library for interactive components
+- **TypeScript** - Type safety and better DX
+- **Firebase** - Authentication and backend services
+- **Nanostores** - Lightweight state management
+- **pnpm** - Package manager (use `pnpm` commands, not `npm`)
+
+## File Naming Conventions
+
+- Use PascalCase for component files: `AuthWidget.tsx`
+- Use kebab-case for stores: `auth-store.ts`
+- Use kebab-case for utilities: `firebase.ts`
+- Use lowercase for pages: `index.astro`
+
+## Architecture Patterns
+
+- Components should be functional and use hooks
+- State management via nanostores for global state
+- Firebase integration centralized in `src/libs/firebase.ts`
+- Components organized by feature in `src/widgets/`

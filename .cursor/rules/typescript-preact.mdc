@@ -1,0 +1,55 @@
+---
+globs: *.ts,*.tsx,*.astro
+description: TypeScript and Preact component development guidelines
+---
+
+# TypeScript & Preact Guidelines
+
+## Component Structure
+
+- **Always export the main component/class at the top of the file** for quick API reference
+- Place all non-exported classes, utilities, and helpers below the main export
+- Use functional components with proper TypeScript typing
+
+## Import Patterns
+
+```tsx
+// External imports first
+import { useStore } from "@nanostores/preact";
+import type { User } from "firebase/auth";
+
+// Internal imports second
+import { authStore } from "../../stores/auth-store.ts";
+```
+
+## Type Safety
+
+- Use explicit return types for functions when not obvious
+- Leverage TypeScript's strict mode (already enabled in `tsconfig.json`)
+- Import types with `type` keyword when only using for typing
+- Use proper typing for Firebase objects and nanostores
+
+## Component Patterns
+
+```tsx
+export const ComponentName = () => {
+  const { data } = useStore(someStore);
+  
+  return (
+    <div>
+      {/* JSX content */}
+    </div>
+  );
+};
+
+// Helper functions and non-exported utilities below
+const helperFunction = () => {
+  // implementation
+};
+```
+
+## Astro Files
+
+- Use TypeScript in Astro frontmatter
+- Import components with full file extensions: `"../widgets/auth/AuthWidget.tsx"`
+- Leverage Astro's islands for interactive components
