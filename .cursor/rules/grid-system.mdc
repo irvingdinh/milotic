@@ -1,0 +1,117 @@
+---
+alwaysApply: true
+description: Grid system patterns and conventions for the Milotic dashboard
+---
+
+# Grid System & Layout Rules
+
+This project uses a **responsive card-based grid system** with TailwindCSS and DaisyUI components.
+
+## Core Grid Structure
+
+The main dashboard grid is defined in [Dashboard.tsx](mdc:src/components/Dashboard.tsx):
+
+```tsx
+<main class="container mx-auto px-6 py-8">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    {children}
+  </div>
+</main>
+```
+
+### Grid Layout Rules
+
+- **Responsive Design**: Always use `grid-cols-1 lg:grid-cols-3` for main dashboard
+  - 1 column on mobile and tablet (default)
+  - 3 columns on large screens (`lg:` breakpoint)
+- **Consistent Spacing**: Use `gap-6` between grid items
+- **Container Pattern**: Wrap grid in `container mx-auto px-6 py-8`
+
+## WidgetCard Component
+
+All dashboard widgets MUST be wrapped in [WidgetCard](mdc:src/widgets/WidgetCard.tsx):
+
+```tsx
+<WidgetCard title="Widget Name" client:load>
+  <YourWidget client:only="preact" />
+</WidgetCard>
+```
+
+### WidgetCard Specifications
+
+- **Square Aspect**: Uses `aspect-square` class for consistent sizing
+- **Card Structure**: Built on DaisyUI `card bg-base-100 shadow-lg`
+- **Flexible Content**: Content area has `flex-1 overflow-y-auto` for scrollable content
+- **Title Styling**: Consistent `card-title text-lg font-semibold mb-3`
+
+## Widget Development Guidelines
+
+### New Widget Creation
+
+When creating new widgets:
+
+1. **Create in `/src/widgets/{category}/` directory**
+2. **Export widget component at top of file** (memory preference)
+3. **Use WidgetCard wrapper** in [index.astro](mdc:src/pages/index.astro)
+4. **Follow TypeScript typing patterns**
+
+### Widget Structure Example
+
+```tsx
+// src/widgets/new-tool/NewToolWidget.tsx
+import type { ComponentChildren } from "preact";
+
+export const NewToolWidget = () => {
+  return (
+    <div class="h-full flex flex-col space-y-4">
+      {/* Widget content */}
+    </div>
+  );
+};
+```
+
+### Integration in Dashboard
+
+Add to [index.astro](mdc:src/pages/index.astro):
+
+```tsx
+<WidgetCard title="New Tool" client:load>
+  <NewToolWidget client:only="preact" />
+</WidgetCard>
+```
+
+## Responsive Breakpoints
+
+Follow TailwindCSS conventions:
+- **Default (mobile)**: `grid-cols-1`
+- **Large screens**: `lg:grid-cols-3` (1024px+)
+- **Spacing**: Consistent `gap-6` across all breakpoints
+
+## Placeholder Widgets
+
+For future tools, use placeholder pattern:
+
+```tsx
+<WidgetCard title="Coming Soon..." class="opacity-50">
+  <div class="h-full flex items-center justify-center text-base-content/40">
+    <div class="text-center space-y-2">
+      <div class="text-4xl">🚧</div>
+      <div class="text-sm">More tools coming soon!</div>
+    </div>
+  </div>
+</WidgetCard>
+```
+
+## CSS Classes & Styling
+
+- **Grid Container**: `grid grid-cols-1 lg:grid-cols-3 gap-6`
+- **Widget Cards**: `card bg-base-100 shadow-lg aspect-square`
+- **Content Areas**: `flex-1 overflow-y-auto overflow-x-hidden`
+- **Responsive Container**: `container mx-auto px-6 py-8`
+
+## Theme Integration
+
+Uses DaisyUI themes from [global.css](mdc:src/styles/global.css):
+- **Default**: `silk` theme
+- **Dark mode**: `abyss` theme with `--prefersdark`
+- **Semantic colors**: Use `base-100`, `base-200`, `base-content` classes

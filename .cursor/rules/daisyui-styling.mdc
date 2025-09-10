@@ -1,0 +1,171 @@
+---
+globs: *.tsx,*.astro,*.css
+description: DaisyUI component patterns and theme integration guidelines
+---
+
+# DaisyUI Styling & Theme Integration
+
+This project uses **DaisyUI** with **TailwindCSS** and implements a dual-theme system.
+
+## Theme Configuration
+
+Defined in [global.css](mdc:src/styles/global.css):
+```css
+@plugin "daisyui" {
+  themes:
+    silk --default,
+    abyss --prefersdark;
+}
+```
+
+### Theme Usage Rules
+- **Light theme**: `silk` (default)
+- **Dark theme**: `abyss` (auto-applies with `prefers-color-scheme: dark`)
+- **Always use semantic color classes** for theme compatibility
+
+## DaisyUI Component Patterns
+
+### Card Components (Primary Pattern)
+```tsx
+// Main card structure - used in WidgetCard.tsx
+<div class="card bg-base-100 shadow-lg aspect-square">
+  <div class="card-body h-full flex flex-col p-4">
+    <h2 class="card-title text-lg font-semibold mb-3 flex-shrink-0">
+      {title}
+    </h2>
+    <div class="flex-1 overflow-y-auto overflow-x-hidden">
+      {content}
+    </div>
+  </div>
+</div>
+```
+
+### Form Elements
+```tsx
+// Input fields
+<input class="input input-bordered w-full" />
+
+// Buttons
+<button class="btn btn-primary">Primary Action</button>
+<button class="btn btn-secondary">Secondary Action</button>
+<button class="btn btn-outline">Outline Button</button>
+
+// Textareas
+<textarea class="textarea textarea-bordered w-full h-32" />
+```
+
+### Layout Components
+```tsx
+// Headers with consistent styling
+<header class="bg-base-100 shadow-sm border-b border-base-300">
+
+// Main content areas
+<main class="container mx-auto px-6 py-8">
+
+// Background colors
+<div class="min-h-screen bg-base-200">
+```
+
+## Semantic Color Classes
+
+### Background Colors
+- `bg-base-100` - Primary background (cards, headers)
+- `bg-base-200` - Secondary background (page background)
+- `bg-base-300` - Tertiary background (borders, dividers)
+
+### Text Colors
+- `text-base-content` - Primary text
+- `text-base-content/70` - Secondary text (70% opacity)
+- `text-base-content/40` - Muted text (40% opacity)
+
+### Border Colors
+- `border-base-300` - Standard borders
+- `border-base-content/20` - Subtle borders
+
+## Component Styling Standards
+
+### Widget Cards
+Must follow this exact structure:
+```tsx
+<div class="card bg-base-100 shadow-lg aspect-square">
+  <div class="card-body h-full flex flex-col p-4">
+    {/* Title area - fixed height */}
+    <h2 class="card-title text-lg font-semibold mb-3 flex-shrink-0">
+      {title}
+    </h2>
+    
+    {/* Scrollable content area - flexible height */}
+    <div class="flex-1 overflow-y-auto overflow-x-hidden">
+      {children}
+    </div>
+  </div>
+</div>
+```
+
+### Interactive Elements
+```tsx
+// Hover states
+<button class="btn btn-primary hover:btn-primary-focus">
+
+// Focus states (automatically handled by DaisyUI)
+<input class="input input-bordered focus:input-primary" />
+
+// Disabled states
+<button class="btn btn-disabled" disabled>
+```
+
+## Spacing & Layout Conventions
+
+### Standard Spacing Scale
+- **Container padding**: `px-6 py-8` (main content areas)
+- **Card padding**: `p-4` (inside card-body)
+- **Element gaps**: `gap-6` (between grid items)
+- **Content spacing**: `space-y-4` (between form elements)
+
+### Flex Patterns
+```tsx
+// Card content layout
+<div class="h-full flex flex-col space-y-4">
+
+// Center content
+<div class="h-full flex items-center justify-center">
+
+// Header layout
+<div class="flex items-center justify-between">
+```
+
+## Shadow & Visual Hierarchy
+
+### Shadow Levels
+- **Cards**: `shadow-lg` (main widget cards)
+- **Header**: `shadow-sm` (subtle header shadow)
+- **Modals/Overlays**: `shadow-xl` (if needed)
+
+### Visual States
+```tsx
+// Placeholder/disabled widgets
+<div class="opacity-50">
+
+// Loading states
+<div class="loading loading-spinner loading-lg">
+
+// Success/error states
+<div class="alert alert-success">
+<div class="alert alert-error">
+```
+
+## Responsive DaisyUI Usage
+
+### Component Responsiveness
+DaisyUI components are responsive by default, but combine with Tailwind utilities:
+
+```tsx
+// Responsive button sizing
+<button class="btn w-full lg:w-auto">
+
+// Responsive modal sizing
+<div class="modal-box w-full max-w-2xl">
+
+// Responsive navigation
+<div class="navbar lg:navbar-horizontal">
+```

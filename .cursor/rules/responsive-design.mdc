@@ -1,0 +1,119 @@
+---
+globs: *.tsx,*.astro
+description: Responsive design patterns and mobile-first approach
+---
+
+# Responsive Design & Component Organization
+
+This project follows **mobile-first responsive design** with TailwindCSS utilities.
+
+## Responsive Grid Patterns
+
+### Main Dashboard Grid
+```tsx
+// Always follow this exact pattern for main layout
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  {children}
+</div>
+```
+
+### Widget Content Responsiveness
+Inside widgets, follow these patterns:
+
+```tsx
+// For forms and inputs
+<div class="space-y-4">
+  <input class="input w-full" />
+  <button class="btn btn-primary w-full lg:w-auto">Action</button>
+</div>
+
+// For content areas
+<div class="flex flex-col lg:flex-row gap-4">
+  {/* Content */}
+</div>
+```
+
+## Breakpoint Strategy
+
+### TailwindCSS Breakpoints Used
+- **No prefix (mobile-first)**: 0px - 1023px
+- **`lg:`** (large): 1024px and up
+
+### Common Responsive Patterns
+
+```tsx
+// Typography scaling
+<h1 class="text-xl lg:text-2xl font-bold">
+
+// Spacing adjustments
+<div class="p-4 lg:p-6">
+
+// Layout changes
+<div class="flex flex-col lg:flex-row">
+
+// Width constraints
+<div class="w-full lg:w-auto">
+```
+
+## Component Organization Rules
+
+### Directory Structure for Widgets
+```
+src/widgets/
+├── {category}/
+│   ├── {WidgetName}Widget.tsx     # Main widget component
+│   └── {WidgetName}Config.tsx     # Optional: configuration component
+└── WidgetCard.tsx                 # Shared card wrapper
+```
+
+### Widget Naming Convention
+- **File**: `{ToolName}Widget.tsx` (PascalCase)
+- **Export**: `export const {ToolName}Widget = () => {}`
+- **Example**: `UuidWidget.tsx` exports `UuidWidget`
+
+## Astro Client Directives
+
+### Widget Integration Pattern
+```tsx
+// In index.astro, always use this pattern:
+<WidgetCard title="Widget Name" client:load>
+  <YourWidget client:only="preact" />
+</WidgetCard>
+```
+
+### Client Directive Rules
+- **WidgetCard**: Use `client:load` (needs to render server-side first)
+- **Widget Components**: Use `client:only="preact"` (interactive content)
+- **Dashboard**: Use `client:load` (needs SSR for SEO)
+
+## Mobile-First Development
+
+### Development Priority
+1. **Design mobile layout first** (single column, full width)
+2. **Test on small screens** before adding desktop styles
+3. **Add `lg:` prefixes** only when needed for larger screens
+4. **Ensure touch-friendly** interactive elements (minimum 44px tap targets)
+
+### Common Mobile Considerations
+```tsx
+// Touch-friendly button sizing
+<button class="btn min-h-[44px] w-full lg:w-auto">
+
+// Readable text sizes
+<p class="text-base leading-relaxed">
+
+// Adequate spacing for touch
+<div class="space-y-4 lg:space-y-2">
+```
+
+## Performance Considerations
+
+### Image and Asset Handling
+- Use responsive images when applicable
+- Lazy load non-critical images
+- Optimize for mobile bandwidth
+
+### Component Loading
+- Keep widget components lightweight
+- Use `client:only="preact"` for widgets to avoid SSR overhead
+- Minimize JavaScript bundle size per widget
