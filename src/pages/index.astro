@@ -1,40 +1,22 @@
 ---
 import '../styles/global.css'
 
-import { Dashboard } from "../components/Dashboard.tsx";
-import { WidgetCard } from "../widgets/WidgetCard.tsx";
-import { CompactRewriteWidget } from "../widgets/rewrite/CompactRewriteWidget.tsx";
-import { UuidWidget } from "../widgets/uuid/UuidWidget.tsx";
-import { TimezoneWidget } from "../widgets/timezone/TimezoneWidget.tsx";
-import { NotepadWidget } from "../widgets/notepad/NotepadWidget.tsx";
+import { RewriteWidget } from '../widgets/rewrite/RewriteWidget'
 ---
 
-<html lang="en">
+<html lang="en" class="bg-base-200">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Milotic - Developer Tools Dashboard</title>
+    <title>Astro</title>
   </head>
   <body>
-    <Dashboard client:load>
-      <WidgetCard title="AI Text Rewriter" client:load>
-        <CompactRewriteWidget client:only="preact" />
-      </WidgetCard>
-      
-      <WidgetCard title="UUID Generator" client:load>
-        <UuidWidget client:only="preact" />
-      </WidgetCard>
-      
-      <WidgetCard title="World Clock" client:load>
-        <TimezoneWidget client:only="preact" />
-      </WidgetCard>
-      
-      <WidgetCard title="Notepad" client:load>
-        <NotepadWidget client:only="preact" />
-      </WidgetCard>
-      
-    </Dashboard>
+    <div class="px-4 py-4">
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+        <RewriteWidget client:only="preact"/>
+      </div>
+    </div>
   </body>
 </html>
