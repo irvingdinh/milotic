@@ -16,7 +16,7 @@ export default defineConfig({
     server: {
       proxy: {
         "/api": {
-          target: "http://localhost:32181",
+          target: "https://irving.dev",
           changeOrigin: true,
           secure: false,
         },
