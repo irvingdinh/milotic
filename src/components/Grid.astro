@@ -1,0 +1,30 @@
+---
+export interface Props {
+  gap?: 'sm' | 'md' | 'lg' | 'xl';
+  class?: string;
+}
+
+const { gap = 'md', class: className = '' } = Astro.props;
+
+const gapClasses = {
+  sm: 'gap-2',
+  md: 'gap-4',
+  lg: 'gap-6',
+  xl: 'gap-8'
+};
+---
+
+<div class={`columns-1 lg:columns-2 xl:columns-3 2xl:columns-4 3xl:columns-5 ${gapClasses[gap]} ${className}`}>
+  <slot />
+</div>
+
+<style>
+  div :global(> *) {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+
+  div :global(> *:last-child) {
+    margin-bottom: 0;
+  }
+</style>

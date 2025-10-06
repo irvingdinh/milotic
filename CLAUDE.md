@@ -5,83 +5,55 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ### Development
-- `pnpm dev` - Starts local dev server at `localhost:4321`
+- `pnpm install` - Install dependencies
+- `pnpm dev` - Start local development server at `localhost:4321`
 - `pnpm build` - Build production site to `./dist/`
-- `pnpm preview` - Preview build locally before deploying
-
-### Code Quality
-- `pnpm lint` - Run ESLint on `.js`, `.ts`, `.tsx`, `.astro` files
+- `pnpm preview` - Preview production build locally
+- `pnpm lint` - Run ESLint on `.js`, `.ts`, `.tsx`, and `.astro` files
 - `pnpm lint:fix` - Auto-fix ESLint issues
-
-### Package Management
-Always use `pnpm` commands, not `npm` or `yarn`.
 
 ## Architecture
 
-### Tech Stack
-- **Astro** - Static site generator with islands architecture for selective hydration
+This is an **Astro + Preact** application with server-side rendering, Firebase authentication, and Tailwind CSS styling.
+
+### Technology Stack
+- **Astro** - Server-side rendered framework with islands architecture
 - **Preact** - Lightweight React alternative for interactive components
-- **TypeScript** - Strict mode enabled for type safety
-- **Tailwind CSS v4** - Using new @tailwindcss/vite plugin with CSS-based configuration
-- **DaisyUI** - Component library with silk (light) and abyss (dark) themes
-- **Firebase** - Authentication with automatic anonymous sign-in fallback
-- **Nanostores** - Global state management with reactive atoms
+- **TypeScript** - Type safety throughout the codebase
+- **Firebase Auth** - User authentication with automatic anonymous sign-in
+- **Nanostores** - Lightweight state management for global state
+- **Tailwind CSS v4** - Utility-first CSS framework (using @tailwindcss/vite)
+- **Node.js adapter** - Deployed as standalone Node.js server
 
 ### Project Structure
 - `src/pages/` - Astro pages defining routes
-- `src/widgets/` - Feature-based component organization (e.g., `rewrite/`)
-- `src/components/` - Shared UI components and icons
-- `src/stores/` - Nanostores for global state (auth-store.ts)
-- `src/libs/` - Third-party integrations (firebase.ts)
-- `src/styles/global.css` - Tailwind imports and DaisyUI theme configuration
+- `src/components/` - Shared UI components (`.astro` and `.tsx` files)
+- `src/libs/` - Core libraries and integrations
+  - `firebase.ts` - Firebase initialization and service exports
+  - `auth-store.ts` - Global authentication state using nanostores
+- `src/styles/` - Global styles and Tailwind configuration
+- `src/widgets/` - Feature-specific component modules (planned)
 
 ### Key Patterns
 
-#### Component Development
-- Export main component at top of file
-- Use functional components with hooks
-- Import components with full extensions: `"../widgets/auth/AuthWidget.tsx"`
-- Use `client:only="preact"` directive for interactive islands in Astro
-
 #### State Management
-- Firebase auth state centralized in `auth-store.ts` using nanostores
-- Components consume stores via `@nanostores/preact` hooks
-- Auth automatically falls back to anonymous sign-in if no user
+Global state is managed with nanostores. Auth state is centralized in `auth-store.ts`:
+```typescript
+export const authStore = atom<{ user: User | null; loading: boolean }>
+```
 
-#### API Integration
-- Proxy `/api` requests to `http://localhost:32181` (configured in Vite)
-- Use Firebase ID tokens for authorization: `await user.getIdToken()`
-- Handle streaming responses with TextDecoder for real-time updates
+#### Firebase Integration
+- Configuration and initialization in `src/libs/firebase.ts`
+- Automatic anonymous authentication as fallback
+- Real-time auth state updates via `onAuthStateChanged`
 
-#### Styling
-- Tailwind CSS v4 with CSS-based configuration
-- DaisyUI components (card, btn, alert, textarea, etc.)
-- Theme-aware components using base-100, base-200 color tokens
+#### Component Architecture
+- Astro components (`.astro`) for static/SSR content
+- Preact components (`.tsx`) for interactive islands
+- JSX configured to use Preact runtime
 
-### Development Guidelines
-
-#### Import Order
-1. External packages
-2. Internal modules (with full file extensions in Astro)
-3. Use `type` keyword for type-only imports
-
-#### TypeScript
-- Strict mode enabled
-- Explicit return types when not obvious
-- Proper typing for Firebase objects and nanostores
-
-#### ESLint Rules
-- Import sorting enforced
-- No console.log (warn/error allowed)
-- Unused vars must start with underscore
-- JSX accessibility rules enabled
-
-#### Git Commits
-Follow conventional commits with past tense:
-- `feat: Added new feature`
-- `fix: Fixed bug in component`
-- `chore: Updated dependencies`
-Use backticks for code references: `Fixed bug in \`auth-store.ts\``
-
-### Testing
-No testing framework currently configured. Consider adding Vitest for Astro compatibility if tests are needed.
+### Configuration Notes
+- Server output mode with Node.js standalone adapter
+- Proxy configured for `/api` routes to `https://irving.dev`
+- TypeScript strict mode enabled
+- ESLint configured for all relevant file types

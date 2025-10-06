@@ -1,11 +1,10 @@
 ---
 import '../styles/global.css'
-
-import { RewriteWidget } from '../widgets/rewrite/RewriteWidget'
-import { Widget } from '../components/Widget.tsx'
+import Grid from '../components/Grid.astro'
+import { Card } from '../components/Card'
 ---
 
-<html lang="en" class="bg-base-200">
+<html lang="en" class="bg-neutral-100 text-black dark:bg-neutral-900 dark:text-white">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,11 +13,12 @@ import { Widget } from '../components/Widget.tsx'
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>
-    <div class="px-4 py-4">
-      <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        <RewriteWidget client:only="preact"/>
-        <Widget/>
-      </div>
+    <div class="p-2">
+      <Grid gap="md">
+        <Card title="AI Rewrite">
+          <p>Hey!</p>
+        </Card>
+      </Grid>
     </div>
   </body>
 </html>
